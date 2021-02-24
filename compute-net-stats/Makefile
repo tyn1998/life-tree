@@ -29,6 +29,23 @@ ifeq ($(UNAME), Linux)
 	CXXFLAGS += -O3 -DNDEBUG -fopenmp
 	LDFLAGS +=
 	LIBS += -lrt -lm
+
+else ifeq ($(UNAME), Darwin)
+  # OS X flags
+  CC = g++-10
+  CXXFLAGS += -std=c++11 -Wall -Wno-unknown-pragmas
+  CXXFLAGS += -O3 -DNDEBUG
+  CLANG := $(shell g++ -v 2>&1 | grep clang | cut -d " " -f 2)
+  ifneq ($(CLANG), LLVM)
+    CXXFLAGS += -fopenmp
+    #CXXOPENMP += -fopenmp
+  else
+    CXXFLAGS += -DNOMP
+    CXXOPENMP =
+  endif
+  LDFLAGS +=
+  LIBS +=
+
 endif
 
 ANALYZE = analyze
