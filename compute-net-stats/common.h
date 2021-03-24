@@ -41,7 +41,6 @@ static const int REWIRE_Q = 100;
 std::string get_path(std::string dir, int organism) {
     // Use long long because gcc 4.4.7 doesn't support to_string(int)
     return dir + "/" + std::to_string((long long)organism);
-    /* return dir + "/" + std::to_string((long long)organism) + ".txt"; */
 }
 
 // Returns the file path inside the root directory containing the organism's data

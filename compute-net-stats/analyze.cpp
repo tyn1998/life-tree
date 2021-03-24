@@ -454,19 +454,29 @@ void analyze_organism(int organism, string input, bool simple_output) {
     cout << "Finished organism " << organism << endl;
 }
 
-// Runs desired function in parallel
-void run_in_parallel() {
-    thread threads[NUM_ORG];
+/* // Runs desired function in parallel */
+/* void run_in_parallel() { */
+/*     thread threads[NUM_ORG]; */
+/*     ifstream org_list(ORG_LOCATION.c_str()); */
+/*     string line; */
+/*     for (int i = 0; getline(org_list, line); i++) { */
+/*         if (i >= CONCURRENCY) threads[i - CONCURRENCY].join(); */
+
+/*         int organism = stoi(line); */
+/*         threads[i] = thread(analyze_organism, organism, "", false); */
+/*     } */
+/*     for (int i = NUM_ORG - CONCURRENCY; i < NUM_ORG; i++) { */
+/*         threads[i].join(); */
+/*     } */
+/* } */
+
+// Runs desired function in sequence
+void run_in_sequence() {
     ifstream org_list(ORG_LOCATION.c_str());
     string line;
     for (int i = 0; getline(org_list, line); i++) {
-        if (i >= CONCURRENCY) threads[i - CONCURRENCY].join();
-
         int organism = stoi(line);
-        threads[i] = thread(analyze_organism, organism, "", false);
-    }
-    for (int i = NUM_ORG - CONCURRENCY; i < NUM_ORG; i++) {
-        threads[i].join();
+        analyze_organism(organism, "", false);
     }
 }
 
@@ -487,7 +497,8 @@ void generate_job_list(int num_instances) {
 int main(int argc, char* argv[]) {
     if (argc == 1) {
         make_analyze_dir();
-        run_in_parallel();
+        /* run_in_parallel(); */
+        run_in_sequence();
     }
     else if (argc > 3) {
         cout << "Use one of the following formats:" << endl
