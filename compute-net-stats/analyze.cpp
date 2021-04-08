@@ -447,9 +447,9 @@ void analyze_organism(int organism, string input, bool simple_output) {
     analyze_clustering(G, organism, simple_output, proteins);
     analyze_lorenz(G, organism, simple_output);
     analyze_degreecentrality(G, organism, simple_output, proteins, NIdDegH);
-//    analyze_betweenness(G, organism, simple_output, proteins, NIdBtwH);
-//    analyze_closeness(G, organism, simple_output, proteins, NIdCloH);
-//    analyze_adjacency(G, organism, simple_output);
+    analyze_betweenness(G, organism, simple_output, proteins, NIdBtwH);
+    analyze_closeness(G, organism, simple_output, proteins, NIdCloH);
+    analyze_adjacency(G, organism, simple_output);
     analyze_fragmentation(G, organism, simple_output, NIdDegH, NIdBtwH, NIdCloH);
     cout << "Finished organism " << organism << endl;
 }

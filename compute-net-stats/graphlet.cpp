@@ -103,26 +103,37 @@ void analyze_organism_graphlets(int organism, int instance, string input, bool s
     cout << "Finished organism " << organism << endl;
 }
 
-// Runs desired function in parallel
-void run_in_parallel() {
-    thread threads[NUM_ORG];
+/* // Runs desired function in parallel */
+/* void run_in_parallel() { */
+/*     thread threads[NUM_ORG]; */
+/*     ifstream org_list(ORG_LOCATION.c_str()); */
+/*     string line; */
+/*     for (int i = 0; getline(org_list, line); i++) { */
+/*         if (i >= CONCURRENCY) threads[i - CONCURRENCY].join(); */
+
+/*         int organism = stoi(line); */
+/*         threads[i] = thread(analyze_organism_graphlets, organism, 0, "", false, 4); */
+/*     } */
+/*     for (int i = NUM_ORG - CONCURRENCY; i < NUM_ORG; i++) { */
+/*         threads[i].join(); */
+/*     } */
+/* } */
+
+// Runs desired function in sequence
+void run_in_sequence() {
     ifstream org_list(ORG_LOCATION.c_str());
     string line;
     for (int i = 0; getline(org_list, line); i++) {
-        if (i >= CONCURRENCY) threads[i - CONCURRENCY].join();
-
         int organism = stoi(line);
-        threads[i] = thread(analyze_organism_graphlets, organism, 0, "", false, 4);
-    }
-    for (int i = NUM_ORG - CONCURRENCY; i < NUM_ORG; i++) {
-        threads[i].join();
+        analyze_organism_graphlets(organism, 0, "", false, 4);
     }
 }
 
 int main(int argc, char* argv[]) {
     if (argc == 1) {
         make_orca_dir();
-        run_in_parallel();
+        /* run_in_parallel(); */
+        run_in_sequence();
     }
     else if (argc > 4) {
         cout << "Use one of the following formats:" << endl
