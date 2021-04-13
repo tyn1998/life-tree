@@ -11,8 +11,8 @@
 typedef PUNGraph PGraph;
 
 /* static const std::string EXTRACTED_DATA_DIR = "<interactomes: path to a directory with network edge lists>"; */
-static const std::string EXTRACTED_DATA_DIR = "data/treeoflife.interactomes";
-static const std::string ROOT_DIR = "all-statistics";
+static const std::string EXTRACTED_DATA_DIR = "input/treeoflife.interactomes";
+static const std::string ROOT_DIR = "output";
 static const std::string STAT_DIR = "statistics";
 static const std::string KCORE_DIR = "kcores";
 static const std::string DEGREE_DIR = "degrees";
@@ -27,9 +27,9 @@ static const std::string FRAGMENT_DIR = "fragmentation";
 static const std::string ORCA_FILE_DIR = "orca-data";
 static const std::string ORCA_STAT_DIR = "orca-statistics";
 static const std::string ORCA_LOG_DIR = "orca-log";
-static const std::string ORCA_EXEC_LOCATION = "./orca";
+static const std::string ORCA_EXEC_LOCATION = "../bin/orca";
 /* static const std::string ORG_LOCATION = "<organisms.txt: path to a list of species to be processed>"; */
-static const std::string ORG_LOCATION = "data/organisms_list.txt";
+static const std::string ORG_LOCATION = "input/organisms_list.txt";
 static const std::string JOB_LIST_LOCATION = "job_list";
 static const int MAX_LENGTH = 64;
 static const int PRECISION = 8;
