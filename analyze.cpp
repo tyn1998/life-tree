@@ -438,7 +438,6 @@ void analyze_organism(int organism, string input, bool simple_output) {
     TIntFltH NIdDegH, NIdBtwH, NIdCloH;
     PGraph G = create_graph(organism, input, proteins);
 
-    // analyze_statistics(G, organism, simple_output);
     G = TSnap::GetMxScc(G);
     analyze_statistics(G, organism, simple_output); // append lcc statistics to end of file
     analyze_kcores(G, organism, simple_output);
@@ -449,7 +448,7 @@ void analyze_organism(int organism, string input, bool simple_output) {
     analyze_degreecentrality(G, organism, simple_output, proteins, NIdDegH);
     analyze_betweenness(G, organism, simple_output, proteins, NIdBtwH);
     analyze_closeness(G, organism, simple_output, proteins, NIdCloH);
-    analyze_adjacency(G, organism, simple_output);
+    /* analyze_adjacency(G, organism, simple_output); */
     analyze_fragmentation(G, organism, simple_output, NIdDegH, NIdBtwH, NIdCloH);
     cout << "Finished organism " << organism << endl;
 }
