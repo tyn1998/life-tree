@@ -36,6 +36,7 @@ PGraph create_graph(int organism, string input, vector<string> &proteins) {
     while (getline(data, line)) {
         sscanf(line.c_str(), "%[^ ] %s", first_protein, second_protein);
 
+        /* 判断一行交互对的两个顶点是否已经在G中，若不在则加入新顶点 */
         if (protein_to_node.count(first_protein) == 0) {
             protein_to_node[first_protein] = G->AddNode();
             proteins.push_back(first_protein);
@@ -44,6 +45,7 @@ PGraph create_graph(int organism, string input, vector<string> &proteins) {
             protein_to_node[second_protein] = G->AddNode();
             proteins.push_back(second_protein);
         }
+        /* 加入边 */
         G->AddEdge(protein_to_node[first_protein], protein_to_node[second_protein]);
     }
 
@@ -412,6 +414,9 @@ void analyze_adjacency(PGraph G, int organism, bool simple_output) {
         for (TIntPrV::TIter TI1 = SccSzCnt.BegI(); TI1 < SccSzCnt.EndI(); TI1++) {
             TInt size = TI1->GetVal1();
             TInt frequency = TI1->GetVal2();
+            /* 移除nodes后剩余图的联通分量情况 */
+            /* size表示联通分量的顶点数 */
+            /* frequency表示这样size的联通分量的个数 */
             fragmentation << size << " " << frequency << ", ";
         }
         fragmentation << endl;

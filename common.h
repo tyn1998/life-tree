@@ -8,10 +8,17 @@
 #include <fstream>
 #include <thread>
 
+/* PUNGraph中的P代表这是个指针类型
+ * UN代表是无向边
+ * Graph代表是图, 即没有权重 */
 typedef PUNGraph PGraph;
 
-/* static const std::string EXTRACTED_DATA_DIR = "<interactomes: path to a directory with network edge lists>"; */
+/* 输入的数据路径 */
 static const std::string EXTRACTED_DATA_DIR = "input/treeoflife.interactomes";
+static const std::string ORG_LOCATION = "input/organisms_list.txt";
+/* static const std::string JOB_LIST_LOCATION = "job_list"; */
+
+/* 输出的数据路径 */
 static const std::string ROOT_DIR = "output";
 static const std::string STAT_DIR = "statistics";
 static const std::string KCORE_DIR = "kcores";
@@ -27,10 +34,9 @@ static const std::string FRAGMENT_DIR = "fragmentation";
 static const std::string ORCA_FILE_DIR = "orca-data";
 static const std::string ORCA_STAT_DIR = "orca-statistics";
 static const std::string ORCA_LOG_DIR = "orca-log";
+/* graphlet调用的orca的路径 */
 static const std::string ORCA_EXEC_LOCATION = "../bin/orca";
-/* static const std::string ORG_LOCATION = "<organisms.txt: path to a list of species to be processed>"; */
-static const std::string ORG_LOCATION = "input/organisms_list.txt";
-static const std::string JOB_LIST_LOCATION = "job_list";
+
 static const int MAX_LENGTH = 64;
 static const int PRECISION = 8;
 static const int NUM_ORG = 2020;
