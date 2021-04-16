@@ -16,7 +16,7 @@ typedef PUNGraph PGraph;
 /* 输入的数据路径 */
 static const std::string EXTRACTED_DATA_DIR = "input/treeoflife.interactomes";
 static const std::string ORG_LOCATION = "input/organisms_list.txt";
-/* static const std::string JOB_LIST_LOCATION = "job_list"; */
+static const std::string JOB_LIST_LOCATION = "job_list";
 
 /* 输出的数据路径 */
 static const std::string ROOT_DIR = "output";
