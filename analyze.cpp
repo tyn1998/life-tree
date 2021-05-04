@@ -19,6 +19,8 @@ void make_analyze_dir() {
     make_dir_rooted(CLOSE_DIR);
     //make_dir_rooted(ADJACENCY_DIR);
     make_dir_rooted(FRAGMENT_DIR);
+
+    make_dir_rooted(MAXCOMPONENT_DIR);
 }
 
 // Creates a graph out of the organism's data, where vertices are proteins and edges are interactions
@@ -443,7 +445,8 @@ void analyze_organism(int organism, string input, bool simple_output) {
     TIntFltH NIdDegH, NIdBtwH, NIdCloH;
     PGraph G = create_graph(organism, input, proteins);
 
-    G = TSnap::GetMxScc(G);
+    G = TSnap::GetMxScc(G); // !!!获得最大连通分量，下面的G是不完整的!!!
+
     analyze_statistics(G, organism, simple_output); // append lcc statistics to end of file
     analyze_kcores(G, organism, simple_output);
     analyze_degrees(G, organism, simple_output);
@@ -498,11 +501,36 @@ void generate_job_list(int num_instances) {
     }
 }
 
+void output_each_max_component() {
+    ifstream org_list(ORG_LOCATION.c_str());
+    string line;
+    for (int i = 0; getline(org_list, line); i++) {
+        int organism = stoi(line);
+        cout << "Started organism " << organism << endl;
+        vector<string> proteins;
+        TIntFltH NIdDegH, NIdBtwH, NIdCloH;
+        PGraph G = create_graph(organism, "", proteins);
+
+        G = TSnap::GetMxScc(G); // !!!获得最大连通分量，下面的G是不完整的!!!
+
+        string output_path = get_output_path(MAXCOMPONENT_DIR, organism, false);
+        // ofstream closeness(output_path.c_str(), ios_base::app);
+        ofstream maxcomponent(output_path.c_str());
+
+        for (PGraph::TObj::TEdgeI EI = G->BegEI(); EI < G->EndEI(); EI++) {
+          maxcomponent << proteins.at(EI.GetSrcNId()) << " "
+                       << proteins.at(EI.GetDstNId()) << endl;
+        }
+    }
+}
+
 int main(int argc, char* argv[]) {
     if (argc == 1) {
-        make_analyze_dir();
+        /* make_analyze_dir(); */
         /* run_in_parallel(); */
-        run_in_sequence();
+
+        /* run_in_sequence(); */
+        output_each_max_component();
     }
     else if (argc > 3) {
         cout << "Use one of the following formats:" << endl

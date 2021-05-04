@@ -14,12 +14,15 @@
 typedef PUNGraph PGraph;
 
 /* 输入的数据路径 */
-static const std::string EXTRACTED_DATA_DIR = "input/treeoflife.interactomes";
-static const std::string ORG_LOCATION = "input/organisms_list.txt";
-static const std::string JOB_LIST_LOCATION = "job_list";
+static const std::string EXTRACTED_DATA_DIR = "../data/input/treeoflife.interactomes";
+static const std::string ORG_LOCATION = "../data/input/organisms_list.txt";
+static const std::string JOB_LIST_LOCATION = "xxxxx";
 
 /* 输出的数据路径 */
-static const std::string ROOT_DIR = "output";
+static const std::string ROOT_DIR = "../data/output";
+
+static const std::string MAXCOMPONENT_DIR = "max-component";
+
 static const std::string STAT_DIR = "statistics";
 static const std::string KCORE_DIR = "kcores";
 static const std::string DEGREE_DIR = "degrees";
