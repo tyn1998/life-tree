@@ -14,7 +14,7 @@ void make_orca_dir() {
 // Same as create_graph in analyze.cpp
 // TODO merge
 PGraph create_graph(int organism, string input, vector<string> &proteins) {
-    string data_path = (input == "") ? get_path(EXTRACTED_DATA_DIR, organism) : input;
+    string data_path = (input == "") ? get_path_rooted(MAXCOMPONENT_DIR, organism) : input;
     ifstream data(data_path.c_str());
     string line;
     char first_protein[MAX_LENGTH];
