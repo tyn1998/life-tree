@@ -1,5 +1,6 @@
 #include "common.h"
 #include <iomanip>
+#include <string>
 #include <unordered_map>
 #include <vector>
 #include <cmath>
@@ -391,7 +392,11 @@ void analyze_adjacency(PGraph G, int organism, bool simple_output) {
     void node_removal(PGraph G, int organism, string strategy, bool simple_output, TIntFltH &Hash) {
     static const int NUM_POINTS = 100;
     string output_path = get_output_path(FRAGMENT_DIR, organism, simple_output);
-    output_path += strategy;
+    if ( strategy == "degreecentrality" || strategy == "closeness" || strategy == "betweenness" ) {
+        output_path += "/" + strategy;
+    } else {
+        output_path += "/random/" + strategy;
+    }
     //ofstream fragmentation(output_path.c_str(), ios_base::app);
     ofstream fragmentation(output_path.c_str());
 
@@ -429,13 +434,19 @@ void analyze_adjacency(PGraph G, int organism, bool simple_output) {
 void analyze_fragmentation(PGraph G, int organism, bool simple_output,
         TIntFltH &NIdDegH, TIntFltH &NIdBtwH, TIntFltH &NIdCloH) {
     TIntFltH NIdRndH;
-    TRnd random(0); // 0 means seed from clock
-    for (PGraph::TObj::TNodeI NI = G->BegNI(); NI < G->EndNI(); NI++) {
-        NIdRndH.AddDat(NI.GetId(), random.GetUniDev());
-    }
+    system(("mkdir -p " + ROOT_DIR + "/" + FRAGMENT_DIR + "/" + to_string( organism )).c_str());
+    system(("mkdir -p " + ROOT_DIR + "/" + FRAGMENT_DIR + "/" + to_string( organism ) + "/random").c_str());
 
-    node_removal(G, organism, "random", simple_output, NIdRndH); // remove random
-    node_removal(G, organism, "degree", simple_output, NIdDegH); // remove highest degree
+    TRnd random(0); // 0 means seed from clock
+    for (int iteration_num=0; iteration_num<1000; iteration_num++) {
+        for (PGraph::TObj::TNodeI NI = G->BegNI(); NI < G->EndNI(); NI++) {
+            NIdRndH.AddDat(NI.GetId(), random.GetUniDev());
+        }
+        node_removal(G, organism, "random_" + to_string(iteration_num) , simple_output, NIdRndH); // remove random
+    }
+    node_removal(G, organism, "degreecentrality", simple_output, NIdDegH);
+    node_removal(G, organism, "betweenness", simple_output, NIdBtwH); 
+    node_removal(G, organism, "closeness", simple_output, NIdCloH); 
 }
 
 // Creates graph of organism's data and analyzes it
@@ -446,6 +457,15 @@ void analyze_organism(int organism, string input, bool simple_output) {
     PGraph G = create_graph(organism, input, proteins);
 
     G = TSnap::GetMxScc(G); // !!!获得最大连通分量，下面的G是不完整的!!!
+
+    // 得到最大连通分量写入文件
+    string output_path = get_output_path(MAXCOMPONENT_DIR, organism, false);
+    // ofstream closeness(output_path.c_str(), ios_base::app);
+    ofstream maxcomponent(output_path.c_str());
+    for (PGraph::TObj::TEdgeI EI = G->BegEI(); EI < G->EndEI(); EI++) {
+      maxcomponent << proteins.at(EI.GetSrcNId()) << " "
+                   << proteins.at(EI.GetDstNId()) << endl;
+    }
 
     analyze_statistics(G, organism, simple_output); // append lcc statistics to end of file
     analyze_kcores(G, organism, simple_output);
@@ -482,6 +502,7 @@ void run_in_sequence() {
     ifstream org_list(ORG_LOCATION.c_str());
     string line;
     for (int i = 0; getline(org_list, line); i++) {
+        cout << "# 这是第 " << i << " 个" << endl;
         int organism = stoi(line);
         analyze_organism(organism, "", false);
     }
@@ -501,36 +522,12 @@ void generate_job_list(int num_instances) {
     }
 }
 
-void output_each_max_component() {
-    ifstream org_list(ORG_LOCATION.c_str());
-    string line;
-    for (int i = 0; getline(org_list, line); i++) {
-        int organism = stoi(line);
-        cout << "Started organism " << organism << endl;
-        vector<string> proteins;
-        TIntFltH NIdDegH, NIdBtwH, NIdCloH;
-        PGraph G = create_graph(organism, "", proteins);
-
-        G = TSnap::GetMxScc(G); // !!!获得最大连通分量，下面的G是不完整的!!!
-
-        string output_path = get_output_path(MAXCOMPONENT_DIR, organism, false);
-        // ofstream closeness(output_path.c_str(), ios_base::app);
-        ofstream maxcomponent(output_path.c_str());
-
-        for (PGraph::TObj::TEdgeI EI = G->BegEI(); EI < G->EndEI(); EI++) {
-          maxcomponent << proteins.at(EI.GetSrcNId()) << " "
-                       << proteins.at(EI.GetDstNId()) << endl;
-        }
-    }
-}
 
 int main(int argc, char* argv[]) {
     if (argc == 1) {
-        /* make_analyze_dir(); */
+        make_analyze_dir();
         /* run_in_parallel(); */
-
-        /* run_in_sequence(); */
-        output_each_max_component();
+        run_in_sequence();
     }
     else if (argc > 3) {
         cout << "Use one of the following formats:" << endl
